@@ -1,14 +1,42 @@
-version: '3.8'
+version: "3.9"
+
+# =====================================
+# GeoVision3D Docker Compose
+# =====================================
 
 services:
-  maps-3d-embed:
-    build: .
+
+  geovision3d:
+
+    container_name: geovision3d
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    restart: unless-stopped
+
     ports:
       - "8080:8080"
+
+    env_file:
+      - .env
+
     environment:
-      - PORT=8080
-      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
-      - ENVIRONMENT=development
+      PORT: 8080
+      ENVIRONMENT: production
+
     volumes:
       - ./static:/root/static
-    restart: unless-stopped
+
+    networks:
+      - geovision-network
+
+# =====================================
+# NETWORKS
+# =====================================
+
+networks:
+
+  geovision-network:
+    driver: bridge
