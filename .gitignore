@@ -1,32 +1,90 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# =====================================
+# GeoVision3D .gitignore
+# =====================================
+
+# ENV FILES
+.env
+.env.local
+.env.production
+
+# LOG FILES
+*.log
+
+# BUILD FILES
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
-*.test
+# GO BUILD
+bin/
+dist/
 
-# Code coverage profiles and other test artifacts
-*.out
-coverage.*
-*.coverprofile
-profile.cov
+# GO MODULES
+vendor/
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# IDE
+.vscode/
+.idea/
 
-# Go workspace file
-go.work
-go.work.sum
+# OS FILES
+.DS_Store
+Thumbs.db
 
-# env file
-.env
+# NODE
+node_modules/
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# TEMP FILES
+tmp/
+temp/
+
+# CACHE
+.cache/
+
+# TEST OUTPUT
+coverage.out
+
+# DOCKER
+docker-compose.override.yml
+
+# CERTIFICATES
+*.pem
+*.key
+*.crt
+
+# MAP API SECRETS
+google-maps-key.txt
+api-keys.json
+
+# STATIC GENERATED FILES
+static/assets/generated/
+
+# RAILWAY / RENDER
+.railway/
+.render/
+
+# CLOUD
+.vercel/
+.netlify/
+
+# LOCAL DATABASES
+*.db
+*.sqlite
+
+# GEO DATA
+*.geojson.tmp
+
+# MAC
+.AppleDouble
+.LSOverride
+
+# LINUX
+*~
+
+# WINDOWS
+Desktop.ini
+
+# =====================================
+# END
+# =====================================
