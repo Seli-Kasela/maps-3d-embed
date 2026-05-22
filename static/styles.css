@@ -1,120 +1,249 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* =====================================
+   GeoVision3D Elite UI
+===================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
+/* BODY */
+
+body{
+
+    font-family:'Inter',sans-serif;
+
+    background:#050505;
+
+    color:white;
+
+    overflow:hidden;
 }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
+/* CONTAINER */
+
+.container{
+
+    position:relative;
+
+    width:100vw;
+
+    height:100vh;
 }
 
-header {
-    text-align: center;
-    color: white;
-    margin-bottom: 30px;
+/* MAP */
+
+#map{
+
+    width:100%;
+
+    height:100vh;
+
+    background:#111;
 }
 
-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+/* LOADING */
+
+#map-loading{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:#050505;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
 }
 
-header p {
-    font-size: 1.1rem;
-    opacity: 0.9;
+.loader{
+
+    width:60px;
+    height:60px;
+
+    border:5px solid rgba(255,255,255,0.1);
+
+    border-top:5px solid #00c6ff;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin-bottom:20px;
 }
 
-.content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 20px;
-    height: 600px;
-}
+@keyframes spin{
 
-.map-container {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-}
-
-#map {
-    width: 100%;
-    height: 100%;
-}
-
-.info-panel {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-}
-
-.info-panel h2 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: #667eea;
-}
-
-#location-info {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 20px;
-}
-
-#location-info p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 10px;
-}
-
-#location-info strong {
-    color: #667eea;
-}
-
-#refresh-btn {
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#refresh-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-#refresh-btn:active {
-    transform: translateY(0);
-}
-
-@media (max-width: 768px) {
-    .content {
-        grid-template-columns: 1fr;
-        height: auto;
+    0%{
+        transform:rotate(0deg);
     }
 
-    header h1 {
-        font-size: 1.8rem;
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+/* INFO PANEL */
+
+.info-panel{
+
+    position:absolute;
+
+    top:20px;
+    left:20px;
+
+    width:340px;
+
+    background:
+        rgba(10,10,10,0.75);
+
+    backdrop-filter:blur(20px);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    border-radius:24px;
+
+    padding:24px;
+
+    z-index:999;
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.6);
+}
+
+/* BRAND */
+
+.brand h1{
+
+    font-size:28px;
+
+    margin-bottom:8px;
+
+    font-weight:700;
+}
+
+.brand p{
+
+    color:#bdbdbd;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+    margin-bottom:24px;
+}
+
+/* GEO INFO */
+
+.geo-card p{
+
+    margin-bottom:16px;
+
+    line-height:1.6;
+
+    font-size:14px;
+}
+
+.geo-card strong{
+
+    color:#00c6ff;
+}
+
+/* BUTTONS */
+
+.controls{
+
+    margin-top:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+}
+
+.controls button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3366ff,
+            #00c6ff
+        );
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.controls button:hover{
+
+    transform:translateY(-2px);
+
+    opacity:0.9;
+}
+
+/* ERROR */
+
+.error-box{
+
+    background:
+        rgba(255,0,0,0.1);
+
+    border:
+        1px solid rgba(255,0,0,0.2);
+
+    padding:16px;
+
+    border-radius:12px;
+
+    color:#ff7b7b;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .info-panel{
+
+        width:90%;
+
+        left:50%;
+
+        transform:translateX(-50%);
+
+        top:15px;
     }
 
-    .map-container {
-        min-height: 400px;
+    .brand h1{
+
+        font-size:22px;
     }
 }
