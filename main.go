@@ -2,9 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"os"
 
@@ -12,139 +10,120 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GeoLocation represents user's geographical location
+// =====================================
+// MODELS
+// =====================================
+
 type GeoLocation struct {
 	IP        string  `json:"ip"`
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
+	ASN       string  `json:"asn"`
 	City      string  `json:"city"`
 	Country   string  `json:"country"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
 	ISP       string  `json:"isp"`
+	Org       string  `json:"org"`
 }
 
-// MapConfig represents the 3D map configuration
 type MapConfig struct {
-	APIKey    string      `json:"apiKey"`
-	Location  GeoLocation `json:"location"`
-	Zoom      int         `json:"zoom"`
-	Tilt      int         `json:"tilt"`
-	Heading   int         `json:"heading"`
+	Location GeoLocation `json:"location"`
+	Zoom     int         `json:"zoom"`
+	Tilt     int         `json:"tilt"`
+	Heading  int         `json:"heading"`
 }
 
-// Server represents the application server
+// =====================================
+// SERVER
+// =====================================
+
 type Server struct {
 	router *mux.Router
 	port   string
 }
 
-// NewServer creates a new server instance
+// =====================================
+// CREATE SERVER
+// =====================================
+
 func NewServer(port string) *Server {
+
 	return &Server{
 		router: mux.NewRouter(),
 		port:   port,
 	}
 }
 
-// setupRoutes configures all API routes
+// =====================================
+// ROUTES
+// =====================================
+
 func (s *Server) setupRoutes() {
-	s.router.HandleFunc("/api/geolocation", s.getGeolocation).Methods("GET")
-	s.router.HandleFunc("/api/map-config", s.getMapConfig).Methods("GET")
-	s.router.HandleFunc("/", s.serveIndex).Methods("GET")
-	s.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
+	s.router.HandleFunc(
+		"/api/geolocation",
+		s.getGeolocation,
+	).Methods("GET")
+
+	s.router.HandleFunc(
+		"/api/map-config",
+		s.getMapConfig,
+	).Methods("GET")
+
+	s.router.HandleFunc(
+		"/",
+		s.serveIndex,
+	).Methods("GET")
+
+	s.router.PathPrefix("/static/").Handler(
+
+		http.StripPrefix(
+			"/static/",
+			http.FileServer(
+				http.Dir("static"),
+			),
+		),
+	)
 }
 
-// getGeolocation returns user's geolocation based on IP
-func (s *Server) getGeolocation(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+// =====================================
+// GEOLOCATION API
+// =====================================
 
-	// Get client IP
-	ip := getClientIP(r)
+func (s *Server) getGeolocation(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
 
-	// Mock geolocation data (in production, use MaxMind GeoIP2 or similar service)
-	geo := GeoLocation{
-		IP:        ip,
-		Latitude:  37.7749,  // San Francisco example
-		Longitude: -122.4194,
-		City:      "San Francisco",
-		Country:   "United States",
-		ISP:       "Example ISP",
-	}
+	w.Header().Set(
+		"Content-Type",
+		"application/json",
+	)
 
-	json.NewEncoder(w).Encode(geo)
-}
+	location := GeoLocation{
 
-// getMapConfig returns 3D map configuration
-func (s *Server) getMapConfig(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+		IP:  getEnv(
+			"DEFAULT_IP",
+			"103.137.82.147",
+		),
 
-	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")
-	if apiKey == "" {
-		http.Error(w, "Google Maps API key not configured", http.StatusInternalServerError)
-		return
-	}
+		ASN: getEnv(
+			"DEFAULT_ASN",
+			"AS138828",
+		),
 
-	config := MapConfig{
-		APIKey: apiKey,
-		Location: GeoLocation{
-			Latitude:  37.7749,
-			Longitude: -122.4194,
-			City:      "San Francisco",
-			Country:   "United States",
-		},
-		Zoom:    18,
-		Tilt:    45,
-		Heading: 0,
-	}
+		City: getEnv(
+			"DEFAULT_CITY",
+			"Badung",
+		),
 
-	json.NewEncoder(w).Encode(config)
-}
+		Country: getEnv(
+			"DEFAULT_COUNTRY",
+			"Indonesia",
+		),
 
-// serveIndex serves the main HTML file
-func (s *Server) serveIndex(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/index.html")
-}
+		Latitude:  -8.7933893,
+		Longitude: 115.1227501,
 
-// getClientIP extracts the client's IP address from the request
-func getClientIP(r *http.Request) string {
-	// Check X-Forwarded-For header (for proxies)
-	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-		return xff
-	}
-
-	// Check X-Real-IP header
-	if xri := r.Header.Get("X-Real-IP"); xri != "" {
-		return xri
-	}
-
-	// Fall back to RemoteAddr
-	ip, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		return r.RemoteAddr
-	}
-	return ip
-}
-
-// Start starts the HTTP server
-func (s *Server) Start() error {
-	s.setupRoutes()
-	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
-		handlers.AllowedHeaders([]string{"Content-Type"}),
-	)(s.router)
-
-	log.Printf("Server starting on port %s", s.port)
-	return http.ListenAndServe(":"+s.port, corsHandler)
-}
-
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	server := NewServer(port)
-	if err := server.Start(); err != nil {
-		log.Fatalf("Server error: %v", err)
-	}
-}
+		ISP: getEnv(
+			"APP_ORG",
+			"Seli Kasela Creative Studio",
