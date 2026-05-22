@@ -1,34 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Google Maps Embed</title>
-    <link rel="stylesheet" href="/static/styles.css">
+
+    <meta charset="UTF-8" />
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>
+        GeoVision3D | Seli Kasela Creative Studio
+    </title>
+
+    <meta
+        name="description"
+        content="Elite Geo Intelligence & 3D Mapping Platform"
+    />
+
+    <!-- GOOGLE FONT -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <!-- LEAFLET -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+
+    <!-- MAIN CSS -->
+    <link
+        rel="stylesheet"
+        href="/static/styles.css"
+    />
+
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>3D Google Maps Embed</h1>
-            <p>View your location in immersive 3D</p>
-        </header>
 
-        <div class="content">
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
+    <!-- LOADING -->
+    <div id="map-loading">
 
-            <aside class="info-panel">
-                <h2>Your Location</h2>
-                <div id="location-info">
-                    <p>Loading location data...</p>
-                </div>
-                <button id="refresh-btn">Refresh Location</button>
-            </aside>
-        </div>
+        <div class="loader"></div>
+
+        <p>Initializing GeoVision3D...</p>
+
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?v=beta&key=YOUR_API_KEY&libraries=threejs"></script>
+    <!-- MAIN -->
+    <div class="container">
+
+        <!-- MAP -->
+        <div id="map"></div>
+
+        <!-- SIDEBAR -->
+        <aside class="info-panel">
+
+            <div class="brand">
+
+                <h1>🌍 GeoVision3D</h1>
+
+                <p>
+                    Real-Time Geo Intelligence Platform
+                </p>
+
+            </div>
+
+            <!-- LOCATION INFO -->
+            <div id="location-info">
+
+                <p>Loading location intelligence...</p>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="controls">
+
+                <button id="refresh-btn">
+                    🔄 Refresh Location
+                </button>
+
+                <button onclick="switchMapType('satellite')">
+                    🛰️ Satellite
+                </button>
+
+                <button onclick="switchMapType('roadmap')">
+                    🗺️ Roadmap
+                </button>
+
+                <button onclick="switchMapType('hybrid')">
+                    🌐 Hybrid
+                </button>
+
+                <button onclick="rotateMap(90)">
+                    🔁 Rotate
+                </button>
+
+                <button onclick="tiltMap(45)">
+                    📐 Tilt
+                </button>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- LEAFLET JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- GOOGLE MAPS -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"
+    ></script>
+
+    <!-- APP -->
     <script src="/static/app.js"></script>
+
 </body>
+
 </html>
